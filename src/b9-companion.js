@@ -28,7 +28,7 @@ class B9Companion extends HTMLElement {
     this.abort=new AbortController();const on=(target,event,fn)=>target.addEventListener(event,fn,{signal:this.abort.signal});
     this.shadowRoot.innerHTML=`<style>
       :host{position:fixed;left:0;top:0;z-index:1000;width:var(--b9-size,300px);height:var(--b9-size,300px);pointer-events:none;isolation:isolate;font-family:Arial,sans-serif}
-      :host([hidden]){display:none!important}*{box-sizing:border-box}.figure{position:absolute;inset:6% 18% 8%;background:none;border:0;padding:0;width:64%;height:86%;pointer-events:auto;touch-action:none;cursor:grab;color:inherit}.figure:active{cursor:grabbing}.figure:focus-visible{outline:2px solid #bf4934;border-radius:18px}
+      :host([hidden]){display:none!important}*{box-sizing:border-box}.figure{position:absolute;inset:6% 18% 8%;background:none;border:0;padding:0;width:64%;height:86%;pointer-events:auto;touch-action:none;cursor:grab;color:inherit}.figure:active{cursor:grabbing}.figure:focus-visible{outline:2px solid #bf4934;border-radius:18px}.figure[data-pointer-focus]:focus-visible{outline:none}
       canvas,.compatibility,.compatibility svg{width:100%;height:100%;display:block;pointer-events:none}canvas[hidden],.compatibility[hidden]{display:none}.close{position:absolute;right:8%;top:5%;width:26px;height:26px;border:1px solid #7777;background:#f7f4eddd;color:#313c41;border-radius:50%;font:18px Arial;pointer-events:auto;cursor:pointer;opacity:0;transition:opacity .12s ease}
       :host(:hover) .close,.figure:focus-visible ~ .close,.close:focus-visible{opacity:1}.close:focus-visible{outline:2px solid #bf4934;outline-offset:2px}
       :host([departing]) .figure,:host([departing]) .close{pointer-events:none}:host([departing]) .close{opacity:0}
@@ -45,8 +45,13 @@ class B9Companion extends HTMLElement {
     on(this.canvas,'webglcontextlost',event=>{event.preventDefault();this.renderFallback('3D stopped; animated compatibility mode is active.');});
     on(this.figure,'pointerdown',event=>{
       if(event.button!==0||this.departure||this.entrance)return;this.noClick=false;this.drag={id:event.pointerId,x:event.clientX,y:event.clientY,dx:event.clientX-this.x,dy:event.clientY-this.y,moved:false,resume:this.mode==='patrol'||this.resumeAt!==null};
+      // Shift alone can trigger :focus-visible after a click. Keep native focus,
+      // but show its ring again only when the visitor uses keyboard controls.
+      this.figure.setAttribute('data-pointer-focus','');
       const resume=this.drag.resume;this.figure.setPointerCapture(event.pointerId);this.park(false);this.drag.resume=resume;
     });
+    on(this.figure,'blur',()=>this.figure.removeAttribute('data-pointer-focus'));
+    on(this.figure,'keydown',event=>{if(!['Shift','Control','Alt','Meta'].includes(event.key))this.figure.removeAttribute('data-pointer-focus');});
     on(this.figure,'pointermove',event=>{if(!this.drag||event.pointerId!==this.drag.id)return;this.drag.moved ||= Math.hypot(event.clientX-this.drag.x,event.clientY-this.drag.y)>5;this.x=event.clientX-this.drag.dx;this.y=event.clientY-this.drag.dy;this.clamp();this.paint();});
     const release=event=>{
       if(!this.drag||this.drag.id!==event.pointerId)return;

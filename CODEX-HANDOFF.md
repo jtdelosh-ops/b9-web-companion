@@ -19,6 +19,8 @@ the full test page. Do not require Spark or rebuild the artwork from scratch.
   background-tab pause, including the reduced-motion stationary greeting.
 - A remote connects automatically when its target robot is inserted later.
   Its temporary discovery observer is cleaned up after connection or removal.
+- Pointer clicks and standalone modifier keys do not leave a focus rectangle
+  around the robot. Keyboard navigation and activation retain a visible ring.
 
 The button is included in the widget's remote. The eventual website only
 needs the bundled script, `<b9-companion>` and `<b9-remote>` elements. An
@@ -71,8 +73,9 @@ the tested bundle's SHA-256 hash with the expected immutable cache header.
 
 `src/components/B9Companion.astro` in the portfolio adds the hidden, muted
 size-220 robot and compact remote to its shared layout. The exact revision 14
-bundle is vendored as `public/assets/b9/b9-companion.c96958b2dcbd.js`, with
-credits and a byte-integrity check. Update the source project first, then
+bundle is vendored under `public/assets/b9/` with a content-hashed filename,
+credits and a byte-integrity check. The portfolio's `docs/b9-companion.md`
+records the current source commit and hash. Update the source project first, then
 vendor a newly hashed bundle when making future companion changes.
 
 ## Build and verification
