@@ -12,7 +12,22 @@ work from the standalone preview was set aside and is excluded from Git.
   later. The temporary observer is removed on connection or disconnection.
 - Added focused regressions while retaining the original complete test suite.
 - Added `npm start` for a loopback-only local preview and created the private
-  `jtdelosh-ops/b9-web-companion` repository. No live website was changed.
+  `jtdelosh-ops/b9-web-companion` repository.
+
+## Personal website integration
+
+On 2026-09-18 the user requested adding the companion to jamesdelosh.com. The
+portfolio integration was merged in PR #5 of `jtdelosh-ops/james-delosh-portfolio`.
+It uses the exact tested bundle on every page, defaults to hidden/muted, keeps
+the remote in the lower left, reserves footer clearance, preserves the skip
+link, and hides the widget for printing. The portfolio's build checks verify
+the bundle hash and integration markup on all seven pages.
+
+The hosted Cloudflare preview passed desktop and 390px browser checks for
+entrance, Hello, roaming, dismissal/reopen, keyboard closing/focus, page
+navigation and footer clearance. No console warnings/errors were observed.
+Production deployment and site validation passed. The live site displayed the
+centered Hello greeting, and the served bundle matched the tested SHA-256 hash.
 
 ## Current behavior and user corrections
 
@@ -89,13 +104,14 @@ shows the corrected rest, half and full poses. head-positions.png and
 turn-and-head.mp4 show the current artwork. Other before/after images document
 historical repairs. SVG artwork is rendered with librsvg and visually inspected.
 
-Live browser CSS, real pointer capture, optional WebGL presentation and speaker
-output are not verified in the Windows in-app browser. The available browser
-previously rejected local-file navigation; do not bypass that restriction.
+Hosted browser layout and interaction checks are recorded above. Native pointer
+capture, optional WebGL presentation and audible speaker output still need
+dedicated checks. The browser previously rejected local-file navigation; do not
+bypass that restriction.
 
 ## Build
 
 Edit src/, then run npm test. The kit includes source, built previews, tests,
 embedded recordings, documentation and visual evidence, excluding node_modules.
-The project is prepared for GitHub; see CODEX-HANDOFF.md. No live-site deployment
-has been requested or performed.
+The source is pushed to GitHub and integrated into jamesdelosh.com. See
+CODEX-HANDOFF.md for the repositories and bundle update workflow.

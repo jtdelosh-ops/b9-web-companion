@@ -13,6 +13,9 @@ him, and when to send him on his way.
 
 ## Try it
 
+Meet B-9 on [jamesdelosh.com](https://jamesdelosh.com) using the button in the
+lower-left corner.
+
 Open [the compact preview](dist/classic-b9-remote.html) in your browser and click
 **Meet B-9**. No installation is needed.
 
