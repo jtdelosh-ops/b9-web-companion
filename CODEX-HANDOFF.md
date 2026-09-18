@@ -29,6 +29,8 @@ existing website button can instead call `robot.show()`. See README.md.
 ## Preserve these corrections
 
 - Current silver body, dome, red claws, moving treads and reference proportions.
+- The far arm paints behind both the torso and ribbed waist. Its claw may show
+  outside the silhouette, but must not paint over the waist when turning.
 - One rigid tread carriage, centered torso, contained chest panels and seated
   supports. Do not reintroduce separate feet or side-view clipping.
 - Fixed fluted collar and ear dishes above the torso. Only the stem and bulb
@@ -101,6 +103,8 @@ an HTTP smoke check. Browser/speaker checks below remain separate.
 controlled animation clock, shared geometry, rasterized production SVG, and
 software audio output. `test-entrance.cjs` covers the new arrival behavior;
 `test-pages.cjs` covers both standalone pages and the external-script example.
+`test-arm-render.cjs` checks far-arm occlusion by the torso and waist while
+preserving the visible arm silhouette and near claw across idle and active poses.
 
 Open `dist/classic-b9-remote.html` for the compact preview or
 `dist/classic-b9-demo.html` for the full test controls. Keep both; they share

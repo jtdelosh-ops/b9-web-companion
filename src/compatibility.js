@@ -23,8 +23,8 @@ export function compatibilityMarkup(){
   </defs>
   <ellipse cx="220" cy="429" rx="111" ry="7" fill="#000" opacity=".16"/>
   <g class="compat-chassis">${chassisMarkup(0)}</g><g class="compat-legs">${leg(-1)}${leg(1)}</g>
-  <g class="compat-waist"><ellipse cx="220" cy="250" rx="67" ry="9" fill="url(#silver)" stroke="#d6dcd9"/><path d="M154 246v10q66 12 132 0v-10" fill="url(#silver)" stroke="#65747b"/>${rows(5,i=>`<rect x="151" y="${253+i*8}" width="138" height="13" rx="7" fill="url(#rubber)" stroke="#171c1d" stroke-width="1"/>`)}</g>
   <g class="compat-arms-back"></g>
+  <g class="compat-waist"><ellipse cx="220" cy="250" rx="67" ry="9" fill="url(#silver)" stroke="#d6dcd9"/><path d="M154 246v10q66 12 132 0v-10" fill="url(#silver)" stroke="#65747b"/>${rows(5,i=>`<rect x="151" y="${253+i*8}" width="138" height="13" rx="7" fill="url(#rubber)" stroke="#171c1d" stroke-width="1"/>`)}</g>
   <g class="compat-body">
     <path class="compat-body-outline" d="${BODY_OUTLINE}" fill="url(#silver)" stroke="#747e85" stroke-width="1.5"/>
     <path d="M139 154q81-12 162 0M139 222q81 10 162 0" fill="none" stroke="#59676d" stroke-width="2"/>
