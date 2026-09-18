@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B-9 — classic Robot companion</title>
+<style>
+  :root{color-scheme:light;--paper:#eeeae0;--ink:#28343a;--sub:#647176;--line:#cecabe;--red:#a33b2d;--card:#f7f4ed}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh}body.dark{color-scheme:dark;--paper:#172126;--ink:#eef0e9;--sub:#a0b0b5;--line:#3c494c;--red:#ef9581;--card:#253036}
+  header{padding:24px 5vw;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}.brand{font:bold 12px monospace;letter-spacing:.17em}.brand i{display:inline-block;background:#b6422f;width:10px;height:10px;border-radius:50%;margin-right:12px}.tag{font:10px monospace;letter-spacing:.12em;color:var(--sub)}main{max-width:1320px;padding:45px 6vw 380px;margin:auto}h1{font:normal clamp(48px,5.7vw,78px)/1.02 Georgia,serif;letter-spacing:-.04em;margin:12px 0 22px}.eyebrow{font:10px monospace;letter-spacing:.18em;color:var(--red)}.intro{max-width:530px;font-size:15px;line-height:1.65;color:var(--sub)}.control-panel{margin-top:25px;max-width:710px;display:flex;flex-wrap:wrap;gap:9px}button,select{border:1px solid var(--line);border-radius:6px;color:var(--ink);background:var(--card);font:12px Arial;padding:12px 15px;cursor:pointer}button:hover{border-color:var(--red)}button.primary{background:#a43c2e;color:#fff9eb;border-color:#a43c2e}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--red);outline-offset:3px}.settings{display:flex;align-items:center;flex-wrap:wrap;gap:20px;margin:23px 0;font-size:12px;color:var(--sub)}label{display:flex;align-items:center;gap:8px}input{accent-color:#a43c2e}input[type=range]{width:100px}#size-value{font:11px monospace;min-width:40px}.readout{font:11px/1.6 monospace;color:var(--sub);max-width:560px;padding:14px 0;border-top:1px solid var(--line)}.note{font-size:11px;line-height:1.65;color:var(--sub);max-width:590px}.line{position:fixed;bottom:32px;height:1px;left:5vw;right:5vw;background:var(--line);pointer-events:none}footer{position:fixed;bottom:10px;left:5vw;right:5vw;font:9px monospace;letter-spacing:.08em;color:var(--sub);pointer-events:none}details{margin-top:17px;font:12px/1.6 Arial;max-width:590px;color:var(--sub)}summary{cursor:pointer}a{color:var(--red)}
+  .control-panel,.settings{position:relative;z-index:1100}
+  @media(max-width:650px){header{padding:20px 6vw}.tag{font-size:8px}main{padding:30px 7vw 390px}h1{font-size:50px}.intro{font-size:14px}.control-panel{gap:7px}button,select{padding:11px 12px}.settings{gap:13px}footer{font-size:8px}}
+</style></head><body>
+<header><div class="brand"><i></i>B-9 / CLASSIC</div><span class="tag">TV-STYLE REVISION 13</span></header>
+<main>
+  <div class="eyebrow">BACK TO THE TELEVISION ORIGINAL</div>
+  <h1>Danger,<br>Will Robinson.</h1>
+  <p class="intro">A broader barrel body, heavy rubber bellows, clear bubble head, red claws, and one joined silver tread base. A closer, still unofficial interpretation of the classic <em>Lost in Space</em> Robot.</p>
+  <div class="control-panel">
+    <button class="primary" id="warning">Warning! Warning!</button>
+    <button id="wave">Wave arms</button>
+    <button id="greet">Stop and wave now</button>
+    <button id="bob">Restore head</button>
+    <button id="retract">Retract head · uncomfortable</button>
+    <button id="turn-left">Turn left</button>
+    <button id="face-front">Face me</button>
+    <button id="turn-right">Turn right</button>
+    <button id="turn-around">Turn around</button>
+    <button id="demo">Run motion demo</button>
+    <select id="quote" aria-label="Choose a Robot quote"></select>
+    <button id="say">Say it</button>
+    <button id="patrol">Start rolling</button>
+    <button id="park">Park</button>
+    <button id="visibility">Meet B-9</button>
+    <button id="about">About me</button>
+  </div>
+  <div class="settings">
+    <button id="voice" aria-pressed="false">Enable voice</button>
+    <button id="test-voice">Test TV voice</button>
+    <button id="motion" aria-pressed="true">Pause animation</button>
+    <label>Rendering <select id="renderer"><option value="compatibility">Animated compatibility</option><option value="3d">3D model</option></select></label>
+    <label><input id="routine" type="checkbox">Occasional lines</label>
+    <label><input id="greetings" type="checkbox" checked>Stop and wave occasionally</label>
+    <label>Size <input id="size" type="range" min="180" max="450" value="350" step="10"><span id="size-value">350px</span></label>
+    <button id="theme" aria-pressed="false">Dark background</button>
+  </div>
+  <div class="readout" role="status"><span id="state">Starting Robot…</span><br><span id="voice-state">Silent · enable voice to hear him</span></div>
+  <p class="note">While rolling, he occasionally stops, faces you, waves for about four seconds, then carries on. Choose Meet B-9 to invite him in: he rolls to the center, faces you, waves hello, then roams left, right, up and down. Closing him sends him rolling off the nearest side; Show repeats his entrance and greeting. After each wave, he rolls for another 16–26 seconds. Drag him while roaming: he pauses for three seconds, then resumes at the new position. Park keeps him still. “Retract head” withdraws the stem into the fixed fluted collar, leaving the bulb resting above it. Holds vary from 1.5–6 seconds. Voice starts muted; “Test TV voice” explicitly enables it.</p>
+  <details id="audio-help"><summary>Audio help / direct player</summary><p>This player uses an MP3 copy of the warning clip. Try it if “Test TV voice” is silent. If both are silent, check whether the app or tab is muted, or try the file in a regular browser.</p><audio id="direct-audio" controls preload="none" aria-label="Direct TV warning audio player" style="max-width:100%"></audio><p id="audio-error" role="status"></p></details>
+  <details><summary>For your résumé website / portable remote</summary><p>The compact, draggable B-9 remote in the lower left is also included in the web kit. Add it beside the reusable widget with a single extra element. The reusable widget waits off-screen behind Meet B-9. Both Meet and Show bring him to the center for a hello wave before roaming. Sound is always opt-in. Reduced-motion settings use an immediate, stationary greeting. Compatibility mode uses layered SVG views without 3D support. The model is fan-made, not an official or exact prop replica.</p><p>Three short TV voice excerpts are embedded from <a href="https://www.wavsource.com/tv/lost_in_space.htm" target="_blank" rel="noopener">WavSource</a>, credited there to Dick Tufeld. Public-website reuse rights have not been verified. Only these authentic recordings are used; there is no generated voice. Visual reference: <a href="https://propstoreauction.com/lot-details/index/catalog/456/lot/171962/159-B9Creations-Light-Up-Life-Size-B9-Environmental-Control-Robot-Animatronic-Replica-LOST-IN-SPACE-1965-1968" target="_blank" rel="noopener">B9Creations replica photographs</a>. The optional 3D renderer uses Three.js.</p></details>
+</main><div class="line" aria-hidden="true"></div><footer>TV-STYLE REVISION 13 · RIGID TREAD BASE · RETRACTING HEAD · HELLO & ROAM</footer>
+<b9-companion id="test-robot" size="350"></b9-companion>
+<b9-remote for="test-robot"></b9-remote>
+<script>/* __B9_BUNDLE__ */</script>
+<script>
+const robot=document.querySelector('b9-companion');
+const byId=id=>document.getElementById(id);
+for(const quote of robot.getQuotes()){const option=document.createElement('option');option.value=quote.text;option.textContent=quote.text;byId('quote').append(option);}
+function sync(){
+ const s=robot.debugState();
+ if(!robot.hidden)robot.hasEntered=true;
+ const rendering=s.renderer==='3d'?'3D model':'Animated compatibility';
+ const facing=Math.round(((s.yaw*180/Math.PI)%360+360)%360);
+ byId('state').textContent=robot.hidden?'Ready to meet B-9':`${rendering} · `+(!s.motionAllowed?'Animation paused · select Allow animation':s.mode==='entering'?'Rolling to center':s.mode==='exiting'?'Rolling off-screen':s.introduction?'Hello wave':s.greeting==='turning'?'Stopped · turning toward you':s.greeting==='waving'?'Stopped · waving':s.resumePending?'Resumes rolling in '+Math.ceil(s.resumeIn)+'s':s.retracting?'Head retracting':s.warning?'Warning gesture':s.mode==='patrol'?'Rolling':'Parked')+` · facing ${facing}°`;
+ byId('voice-state').textContent=robot.voiceStatus||'Silent · enable voice to hear him';
+ byId('voice').textContent=robot.voiceEnabled?'Mute voice':'Enable voice';byId('voice').setAttribute('aria-pressed',String(robot.voiceEnabled));
+ byId('patrol').textContent=robot.mode==='patrol'?'Stop rolling':'Start rolling';byId('visibility').textContent=robot.hidden?(robot.hasEntered?'Show':'Meet B-9'):robot.mode==='exiting'?'Show':'Hide';byId('routine').checked=robot.routine;
+ byId('motion').textContent=s.motionAllowed?'Pause animation':'Allow animation';byId('motion').setAttribute('aria-pressed',String(s.motionAllowed));byId('renderer').value=s.renderer;
+ byId('greetings').checked=robot.greetings;byId('audio-error').textContent=s.audioError?'Last playback error: '+s.audioError:'';
+}
+robot.addEventListener('robotstatechange',sync);
+byId('about').addEventListener('click',()=>document.querySelector('b9-remote').showAbout());
+byId('warning').addEventListener('click',()=>robot.warn());
+byId('wave').addEventListener('click',()=>robot.wave());
+byId('greet').addEventListener('click',()=>{cancelDemo();robot.greet();});
+byId('bob').addEventListener('click',()=>robot.restoreHead());
+byId('retract').addEventListener('click',()=>robot.retractHead());
+byId('turn-left').addEventListener('click',()=>{cancelDemo();robot.turn(-90);});
+byId('face-front').addEventListener('click',()=>{cancelDemo();robot.face(0);});
+byId('turn-right').addEventListener('click',()=>{cancelDemo();robot.turn(90);});
+byId('turn-around').addEventListener('click',()=>{cancelDemo();robot.turn(180);});
+byId('motion').addEventListener('click',()=>robot.setMotion(!robot.motionAllowed));
+byId('renderer').addEventListener('change',event=>robot.setRenderMode(event.target.value));
+let demoTimers=[];
+function cancelDemo(){demoTimers.forEach(clearTimeout);demoTimers=[];byId('demo').textContent='Run motion demo';}
+robot.addEventListener('pointerdown',cancelDemo);
+document.querySelector('b9-remote').addEventListener('click',cancelDemo);
+byId('demo').addEventListener('click',()=>{
+ if(demoTimers.length){cancelDemo();robot.park(false);return;}
+ robot.setMotion(true);robot.show();robot.patrol();byId('demo').textContent='Stop motion demo';
+ demoTimers=[setTimeout(()=>{robot.face(180);},3000),setTimeout(()=>{robot.face(0);robot.retractHead();},5000),setTimeout(()=>robot.warn(),8100),setTimeout(()=>{robot.park(false);cancelDemo();},13200)];
+});
+byId('say').addEventListener('click',()=>robot.warn(byId('quote').value));
+byId('voice').addEventListener('click',()=>{robot.setVoice(!robot.voiceEnabled);if(robot.voiceEnabled)robot.warn();});
+byId('test-voice').addEventListener('click',()=>robot.testVoice());
+byId('direct-audio').src=robot.getVoiceClip();
+byId('direct-audio').addEventListener('play',()=>{robot.stopSpeech();robot.setVoice(true);});
+byId('patrol').addEventListener('click',()=>robot.mode==='patrol'?robot.park(false):robot.patrol());
+byId('park').addEventListener('click',()=>{cancelDemo();robot.show();robot.park();});
+byId('visibility').addEventListener('click',()=>{cancelDemo();robot.hidden||robot.mode==='exiting'?robot.show():robot.hide();});
+robot.addEventListener('robotstatechange',()=>{if(robot.hidden||['entering','exiting'].includes(robot.mode)||!robot.motionAllowed)cancelDemo();if(robot.hidden||robot.mode==='exiting'||!robot.voiceEnabled)byId('direct-audio').pause();});
+byId('routine').addEventListener('change',event=>robot.setRoutine(event.target.checked));
+byId('greetings').addEventListener('change',event=>robot.setGreetings(event.target.checked));
+byId('size').addEventListener('input',event=>{robot.setAttribute('size',event.target.value);byId('size-value').textContent=Math.round(robot.size)+'px';});
+byId('theme').addEventListener('click',event=>{const dark=document.body.classList.toggle('dark');event.target.textContent=dark?'Light background':'Dark background';event.target.setAttribute('aria-pressed',String(dark));});
+if(innerWidth<650){robot.setAttribute('size','220');byId('size').value='220';byId('size-value').textContent='220px';}
+sync();
+setInterval(sync,500);
+</script></body></html>
