@@ -62,7 +62,24 @@ class B9Companion extends HTMLElement {
     on(this.shadowRoot.querySelector('.close'),'click',()=>this.hide());
     on(this,'keydown',event=>{if(event.key==='Escape'){this.park(false);this.stopSpeech();this.warningUntil=0;this.bubble.hidden=true;}});
     on(window,'resize',()=>this.resize());on(this.motion,'change',()=>{if(!this.motionAllowed){if(this.departure)this.finishHide();else if(this.entrance)this.finishEntrance();else this.park(false);}this.requestFrame();this.emit();});
-    on(document,'visibilitychange',()=>{if(document.hidden){if(this.departure)this.finishHide();this.cancelGreeting();this.stopFrames();this.stopSpeech();}else this.requestFrame();});
+    on(document,'visibilitychange',()=>{
+      if(document.hidden){
+        this.visibilityPausedAt ??= performance.now();
+        if(this.departure)this.finishHide();
+        this.stopFrames();this.stopSpeech();
+      }else{
+        if(this.visibilityPausedAt!=null){
+          const pausedFor=performance.now()-this.visibilityPausedAt;
+          // Animation time already pauses. Keep captions and timed gestures
+          // on the same visible-time schedule when the visitor returns.
+          for(const deadline of ['helloUntil','waveUntil','bobUntil']){
+            if(this[deadline]>this.visibilityPausedAt)this[deadline]+=pausedFor;
+          }
+          this.visibilityPausedAt=null;
+        }
+        this.requestFrame();
+      }
+    });
     if(!this.introduced){this.introduced=true;if(this.hasAttribute('autostart')){this.hidden=true;this.show();}}
     this.requestFrame();this.emit();
   }
@@ -89,6 +106,7 @@ class B9Companion extends HTMLElement {
     catch(error){this.renderer?.dispose();this.renderer=null;this.renderFallback('3D unavailable; animated compatibility mode is active.');}
   }
   disconnectedCallback(){
+    this.visibilityPausedAt=null;
     if(this.departure||this.entrance)this.finishHide();
     this.resumeAt=null;this.drag=null;this.stopFrames();this.stopSpeech();this.clipPlayer?.dispose();this.clipPlayer=null;this.abort?.abort();
     this.scene?.traverse(object=>{object.geometry?.dispose();if(object.material){for(const m of Array.isArray(object.material)?object.material:[object.material])m.dispose();}});

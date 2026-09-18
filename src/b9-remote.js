@@ -6,6 +6,7 @@ class B9Remote extends HTMLElement {
   connectedCallback(){
     if(this.abort)return;
     this.abort=new AbortController();
+    const signal=this.abort.signal;
     const on=(target,event,fn)=>target.addEventListener(event,fn,{signal:this.abort.signal});
     this.shadowRoot.innerHTML=`<style>
       :host{position:fixed;left:16px;bottom:16px;z-index:var(--b9-remote-z-index,1200);display:block;width:236px;max-width:calc(100vw - 24px);font:13px/1.4 Arial,Helvetica,sans-serif;color:#2b363c;color-scheme:light}
@@ -64,14 +65,23 @@ class B9Remote extends HTMLElement {
       event.preventDefault();const rect=this.getBoundingClientRect();this.position={x:rect.left+delta[0],y:rect.top+delta[1]};this.clampPosition();
     });
     this.setOpen(this.open);this.connect();
-    customElements.whenDefined('b9-companion').then(()=>{if(this.isConnected)this.connect();});
+    customElements.whenDefined('b9-companion').then(()=>{if(!signal.aborted&&this.isConnected)this.connect();});
   }
-  disconnectedCallback(){this.abort?.abort();this.abort=null;this.drag=null;this.robot=null;}
+  disconnectedCallback(){this.abort?.abort();this.abort=null;this.stopWaitingForRobot();this.drag=null;this.robot=null;}
   attributeChangedCallback(){if(this.abort)this.connect();}
   connect(){
-    const id=this.getAttribute('for');this.robot=id?document.getElementById(id):document.querySelector('b9-companion');
+    if(!this.isConnected||!this.abort)return;
+    const id=this.getAttribute('for');this.robot=id?this.ownerDocument.getElementById(id):this.ownerDocument.querySelector('b9-companion');
     if(typeof this.robot?.debugState!=='function')this.robot=null;this.sync();
+    if(this.robot)this.stopWaitingForRobot();
+    else if(!this.targetObserver){
+      // The remote may precede its target even after both elements are defined.
+      // Stop observing as soon as it connects so normal page updates stay cheap.
+      this.targetObserver=new MutationObserver(()=>this.connect());
+      this.targetObserver.observe(this.ownerDocument,{childList:true,subtree:true,attributes:true,attributeFilter:['id']});
+    }
   }
+  stopWaitingForRobot(){this.targetObserver?.disconnect();this.targetObserver=null;}
   setAbout(show){
     this.shadowRoot.querySelector('.about').hidden=!show;
     this.shadowRoot.querySelector('.about-toggle').setAttribute('aria-expanded',String(!!show));this.clampPosition();
@@ -117,7 +127,7 @@ class B9Remote extends HTMLElement {
     const status=this.shadowRoot.querySelector('.status'),buttons=this.shadowRoot.querySelectorAll('[data-action]');
     buttons.forEach(button=>button.disabled=!this.robot);
     this.quote.disabled=!this.robot;this.shadowRoot.querySelector('.routine').disabled=!this.robot;
-    if(!this.robot){status.textContent='Robot not found. Check the remote’s “for” ID.';return;}
+    if(!this.robot){this.syncLauncher();status.textContent='Robot not found. Check the remote’s “for” ID.';return;}
     const r=this.robot,s=r.debugState(),button=action=>this.shadowRoot.querySelector(`[data-action="${action}"]`);
     if(r.hidden&&!this.wasHidden)this.setOpen(false);this.wasHidden=r.hidden;this.syncLauncher();
     button('roam').textContent=s.mode==='patrol'||s.resumePending?'Park here':'Start roaming';

@@ -1,4 +1,18 @@
-# B-9 project notes — revision 13
+# B-9 project notes — revision 14
+
+## Revision 14 continuation
+
+Restored the supplied revision 13 source and main-branch history from
+`classic-b9-widget-revision-13.zip` / `git-history.bundle`. Temporary recovery
+work from the standalone preview was set aside and is excluded from Git.
+
+- A hello wave and caption now pause while the tab is hidden and complete
+  their remaining visible duration after returning, including reduced motion.
+- A remote now discovers its robot when inserted later or given the target ID
+  later. The temporary observer is removed on connection or disconnection.
+- Added focused regressions while retaining the original complete test suite.
+- Added `npm start` for a loopback-only local preview and created the private
+  `jtdelosh-ops/b9-web-companion` repository. No live website was changed.
 
 ## Current behavior and user corrections
 
@@ -55,6 +69,10 @@ The user chose this workspace over Spark. The earlier Spark-only handoff is
 superseded; do not require Spark or claim it was used.
 
 ## Verification
+
+Revision 14 passed the complete `npm test` suite on Windows / Node 24.19.0 on
+2026-09-18, including the added hello-suspension cases and five remote lifecycle
+tests. The loopback preview server serves the rebuilt revision 14 page.
 
 npm test builds and exercises both standalone previews and the external-script
 example. It covers motion, dismissal, lifecycle, head bounds and holds, drag

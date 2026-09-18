@@ -1,4 +1,12 @@
-# Classic B-9 web companion — revision 13
+# Classic B-9 web companion — revision 14
+
+Revision 14 preserves the revision 13 artwork and behavior, completes a hello
+greeting after returning from a background tab, and automatically connects a
+remote whose robot is inserted later. The original Git history, tests, audio
+credits and both previews are retained.
+
+Run `npm start` after building to preview at `http://127.0.0.1:4173`.
+The private source repository is https://github.com/jtdelosh-ops/b9-web-companion.
 
 A fan-made interpretation of the Robot from the original *Lost in Space* TV
 series, with a reusable web component, compact movable remote, and full test
@@ -236,6 +244,9 @@ See `CODEX-HANDOFF.md` for the GitHub handoff and remaining browser verification
 `test-entrance.cjs` checks default opt-in behavior, Meet and Show, both entrance
 sides, center/turn/wave/roam ordering, moving treads, repeat clicks, exit reversal,
 resize during entry, background suspension, reduced motion and cancellation.
+It also verifies the remaining hello/caption duration after a background pause,
+including a stationary reduced-motion greeting. `test-remote-lifecycle.cjs`
+covers delayed target insertion, ID changes, target reassignment and cleanup.
 
 `test-travel.cjs` checks both-axis travel, all four boundaries, upward headings,
 left/right roll-away exits, full off-screen completion, interruption/restoration,

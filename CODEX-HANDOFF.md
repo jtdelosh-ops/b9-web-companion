@@ -1,6 +1,6 @@
 # Classic B-9 — Codex handoff
 
-Continue from revision 13 in this project. The user wants a reusable B-9 robot
+Continue from revision 14 in this project. The user wants a reusable B-9 robot
 companion for a personal website, with a compact **Meet B-9** button. Preserve
 the full test page. Do not require Spark or rebuild the artwork from scratch.
 
@@ -15,6 +15,10 @@ the full test page. Do not require Spark or rebuild the artwork from scratch.
   background tab. Repeated Show does not restart an entrance already underway.
 - The launcher becomes the compact remote while the robot is visible.
 - Both previews and the external-script example use the same component.
+- The hello wave and caption retain their remaining visible duration after a
+  background-tab pause, including the reduced-motion stationary greeting.
+- A remote connects automatically when its target robot is inserted later.
+  Its temporary discovery observer is cleaned up after connection or removal.
 
 The button is included in the widget's remote. The eventual website only
 needs the bundled script, `<b9-companion>` and `<b9-remote>` elements. An
@@ -34,39 +38,24 @@ existing website button can instead call `robot.show()`. See README.md.
 - Drag resumes roaming after about three seconds. Keep the hover/focus X,
   brief About me, motion preferences and draggable remote.
 
-## GitHub task still pending
+## Repository and source
 
-The connected account is `jtdelosh-ops`. Suggested new repository:
-`b9-web-companion`. The user authorized preparing and pushing this project.
-No remote repository has been created and no code has been pushed.
+The user authorized creating and pushing this project. The private repository
+is https://github.com/jtdelosh-ops/b9-web-companion, using branch `main`.
+The authenticated GitHub CLI is available; its network operations require the
+appropriate sandbox permission. No GitHub browser navigation is needed.
 
-The native GitHub connector available in this session can create files, blobs,
-trees and commits and update refs, but it has no create-repository operation.
-Browser navigation to GitHub was declined. When the user requested another
-permission prompt, automatic approval review rejected the navigation retry:
-asking to be prompted did not count as explicit access approval. Do not work
-around that rejection. Obtain explicit approval before another GitHub browser
-attempt, or have the user create an empty repository and provide its URL.
+The revision 13 ZIP supplied during continuation contained the complete source,
+tests, built pages, recordings, credits and `git-history.bundle`. Its original
+main commit, `a09f9b04794d742d3a543fa585a0dd439f17b637`, was restored before
+applying revision 14. Temporary standalone-preview recovery files were set
+aside and excluded from Git. Do not replace the restored source with that work
+or with the earlier `classic-b9-widget.zip`, which predates the corrections.
 
-Once a repository exists, prefer the native GitHub connector for the push.
-Alternatively use authenticated git when already available in that session.
-Inspect the destination and existing branch before writing; do not force-push
-or overwrite existing work. Include source, tests, documentation, built dist
-files, recordings and their credits. Exclude node_modules, .env files and the
-unused fallback image. No changes to the live personal website are authorized
-by this handoff alone.
-
-The downloadable kit includes `git-history.bundle`, containing the prepared
-local main branch. To recover its history, clone the bundle into a new folder:
-
-```sh
-git clone /path/to/git-history.bundle b9-web-companion
-cd b9-web-companion
-git remote remove origin
-```
-
-After the user supplies an empty destination, set origin to that actual URL
-and push main. Do not treat the bundle's filesystem path as a GitHub remote.
+Inspect the remote branch before future pushes; never force-push over existing
+work. Keep source, tests, documentation, built dist files, recordings and their
+credits. Exclude node_modules, .env files, temporary imports and the unused
+fallback image. No live personal website deployment has been requested.
 
 ## Build and verification
 
@@ -77,7 +66,15 @@ npm ci
 npm test
 ```
 
-Revision 13 passed the complete `npm test` suite on 2026-09-18.
+The revision 14 suite retains every original regression and adds greeting-pause
+and delayed-remote lifecycle coverage. Use `npm start` to serve the built compact
+preview at http://127.0.0.1:4173; the full demo is `/classic-b9-demo.html` and the
+external-script integration example is `/embed-example.html`.
+
+The complete `npm test` suite passed on Windows with Node 24.19.0 on 2026-09-18,
+including all original rendering, geometry, PCM/audio and compiled-page checks
+and all five new remote-lifecycle cases. The local preview server also passed
+an HTTP smoke check. Browser/speaker checks below remain separate.
 
 `npm test` rebuilds dist and exercises the real component in JSDOM with a
 controlled animation clock, shared geometry, rasterized production SVG, and

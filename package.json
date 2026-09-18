@@ -1,11 +1,12 @@
 {
   "name": "classic-b9-companion-demo",
-  "version": "13.0.0",
+  "version": "14.0.0",
   "private": true,
   "description": "TV-style B-9 companion with animated SVG compatibility and optional articulated 3D",
   "scripts": {
     "build": "node build.cjs",
-    "test": "node build.cjs && node test.cjs && node test-entrance.cjs && node test-travel.cjs && node test-chassis.cjs && node test-body-render.cjs && node test-support-render.cjs && node test-head-render.cjs && node test-reference-render.cjs && node test-audio.cjs && node test-pages.cjs"
+    "test": "node build.cjs && node test.cjs && node test-entrance.cjs && node test-travel.cjs && node test-chassis.cjs && node test-body-render.cjs && node test-support-render.cjs && node test-head-render.cjs && node test-reference-render.cjs && node test-audio.cjs && node test-pages.cjs && node --test test-remote-lifecycle.cjs",
+    "start": "node scripts/serve.cjs"
   },
   "dependencies": {
     "three": "0.186.0"

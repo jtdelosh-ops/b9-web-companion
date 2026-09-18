@@ -32,13 +32,24 @@ r.show({immediate:true});r.park(false);r.x=100;r.y=180;r.hide();advance(1000);co
 r.hide({immediate:true});r.show();advance(400);const travelX=r.x;w.innerWidth=390;w.innerHeight=844;r.resize();assert.equal(r.x,travelX);arrive();assert(r.size<=220);
 // A background tab suspends entry; returning resumes toward the center.
 r.hide({immediate:true});r.show();advance(200);background=true;w.document.dispatchEvent(new w.Event('visibilitychange'));const suspendedX=r.x;advance(2000);assert.equal(frames.size,0);assert.equal(r.x,suspendedX);background=false;w.document.dispatchEvent(new w.Event('visibilitychange'));arrive();
+// Backgrounding during Hello preserves its remaining visible wave and caption.
+advance(1000);const helloX=r.x,helloY=r.y,helloElapsed=r.elapsed;
+background=true;w.document.dispatchEvent(new w.Event('visibilitychange'));advance(20000);
+assert.equal(frames.size,0);assert.equal(r.elapsed,helloElapsed);assert.equal(r.x,helloX);assert.equal(r.y,helloY);
+background=false;w.document.dispatchEvent(new w.Event('visibilitychange'));advance(2400);
+assert(r.greeting?.intro,'Hello must finish its remaining visible duration after returning');assert.equal(r.caption.textContent,'Hello!');assert.equal(r.bubble.hidden,false);assert.equal(r.x,helloX);assert.equal(r.y,helloY);
+advance(400);assert.equal(r.greeting,null);assert.equal(r.bubble.hidden,true);assert.equal(r.mode,'patrol');assert.notEqual(r.x,helloX);assert.notEqual(r.y,helloY);
 // Motion preferences finish entry without animation, then stay parked.
 r.hide({immediate:true});r.show();advance(200);reduced=true;preference.dispatchEvent(new w.Event('change'));assert(!r.entrance);assert.equal(r.mode,'parked');assert.equal(r.greeting,null);assert.equal(r.x,(w.innerWidth-r.size)/2);advance(4000);assert.equal(frames.size,0);
-r.hide();r.show();assert.equal(r.mode,'parked');assert.equal(r.waveUntil,0);assert.equal(r.caption.textContent,'Hello!');r.hide();assert.equal(frames.size,0);
+r.hide();r.show();assert.equal(r.mode,'parked');assert.equal(r.waveUntil,0);assert.equal(r.caption.textContent,'Hello!');
+// The stationary reduced-motion Hello also retains its caption while suspended.
+advance(1000);const stillX=r.x,stillY=r.y;background=true;w.document.dispatchEvent(new w.Event('visibilitychange'));advance(20000);assert.equal(frames.size,0);
+background=false;w.document.dispatchEvent(new w.Event('visibilitychange'));advance(2400);assert.equal(r.bubble.hidden,false);assert.equal(r.mode,'parked');assert.equal(r.x,stillX);assert.equal(r.y,stillY);
+advance(400);assert.equal(r.bubble.hidden,true);assert.equal(frames.size,0);assert.equal(r.x,stillX);assert.equal(r.y,stillY);r.hide();assert.equal(frames.size,0);
 reduced=false;r.show();advance(200);r.setMotion(false);assert.equal(r.mode,'parked');assert.equal(r.entrance,null);r.hide();r.setMotion(true);
 // Cancelling entry must leave no delayed greeting or motion callback.
 for(const stop of [()=>r.hide({immediate:true}),()=>r.park(false),()=>r.remove()]){
  if(!r.isConnected)w.document.body.append(r);r.hide({immediate:true});r.show();advance(240);stop();const x=r.x;advance(5000);assert.equal(r.entrance,null);assert.equal(r.greeting,null);assert.equal(r.x,x);
 }
 assert.equal(sounds,0);remote.remove();dom.window.close();assert.equal(frames.size,0);
-console.log('PASS: opt-in Meet/Show, both entry sides, center/turn/hello/roam, active treads, repeat clicks, exit reversal, resize, background, reduced motion, interruptions and mute.');
+console.log('PASS: opt-in Meet/Show, both entry sides, center/turn/hello/roam, active treads, repeat clicks, exit reversal, resize, background entry/Hello suspension, reduced motion, interruptions and mute.');

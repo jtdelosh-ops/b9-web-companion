@@ -6,3 +6,9 @@ Thumbs.db
 .env.*
 src/fallback.png
 git-history.bundle
+.npm-cache/
+.kit-import/
+.revision13-import/
+.recovery-work/
+*.zip
+/classic-b9-remote.html
